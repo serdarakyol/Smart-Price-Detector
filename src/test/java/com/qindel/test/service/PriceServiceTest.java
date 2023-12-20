@@ -24,6 +24,7 @@ import com.qindel.test.exception.PriceException;
 import com.qindel.test.mapper.PriceMapper;
 import com.qindel.test.repository.PriceRepository;
 import com.qindel.test.response.ResponseEnum;
+import com.qindel.test.utils.Filter;
 
 @ExtendWith(MockitoExtension.class)
 public class PriceServiceTest {
@@ -38,6 +39,7 @@ public class PriceServiceTest {
     private PriceRepository priceRepository;
 
     List<Price> prices;
+    Filter filter;
 
     @BeforeEach
     void init() {
@@ -60,6 +62,9 @@ public class PriceServiceTest {
         prices = new ArrayList<>();
         prices.addAll(List.of(p1, p2, p3, p4));
 
+        Integer offset = 0;
+        Integer limit = 2;
+        filter = new Filter(limit, offset);
     }
 
     @Test
@@ -74,11 +79,12 @@ public class PriceServiceTest {
                 .startDate(price.getStartDate().toString()).endDate(price.getEndDate().toString())
                 .price(price.getPrice()).build();
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                priceDTO.getProductId(), priceDTO.getBrandId(), date, date)).thenReturn(List.of(prices.get(0)));
-        
+                priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
+                .thenReturn(List.of(prices.get(0)));
+
         // When
-        PriceResponseDTO actualDto = priceService.getPrice(priceDTO);
-        
+        PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
+
         // Then
         assertEquals(expectedDto, actualDto);
     }
@@ -95,11 +101,11 @@ public class PriceServiceTest {
                 .startDate(price.getStartDate().toString()).endDate(price.getEndDate().toString())
                 .price(price.getPrice()).build();
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                priceDTO.getProductId(), priceDTO.getBrandId(), date, date))
+                priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
                 .thenReturn(List.of(prices.get(0), prices.get(1)));
 
         // When
-        PriceResponseDTO actualDto = priceService.getPrice(priceDTO);
+        PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
 
         // Then
         assertEquals(expectedDto, actualDto);
@@ -117,10 +123,10 @@ public class PriceServiceTest {
                 .startDate(price.getStartDate().toString()).endDate(price.getEndDate().toString())
                 .price(price.getPrice()).build();
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                priceDTO.getProductId(), priceDTO.getBrandId(), date, date)).thenReturn(List.of(prices.get(0)));
+                priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable())).thenReturn(List.of(prices.get(0)));
 
         // When
-        PriceResponseDTO actualDto = priceService.getPrice(priceDTO);
+        PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
 
         // Then
         assertEquals(expectedDto, actualDto);
@@ -138,11 +144,11 @@ public class PriceServiceTest {
                 .price(price.getPrice()).build();
         Instant date = Instant.parse(priceDTO.getDate());
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                priceDTO.getProductId(), priceDTO.getBrandId(), date, date))
+                priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
                 .thenReturn(List.of(prices.get(0), prices.get(2)));
 
         // When
-        PriceResponseDTO actualDto = priceService.getPrice(priceDTO);
+        PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
 
         // Then
         assertEquals(expectedDto, actualDto);
@@ -160,11 +166,11 @@ public class PriceServiceTest {
                 .price(price.getPrice()).build();
         Instant date = Instant.parse(priceDTO.getDate());
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                priceDTO.getProductId(), priceDTO.getBrandId(), date, date))
+                priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
                 .thenReturn(List.of(prices.get(0), prices.get(3)));
 
         // When
-        PriceResponseDTO actualDto = priceService.getPrice(priceDTO);
+        PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
 
         // Then
         assertEquals(expectedDto, actualDto);
@@ -178,12 +184,12 @@ public class PriceServiceTest {
                 .date("2020-06-14T21:00:00Z").build();
         Instant date = Instant.parse(priceDTO.getDate());
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                priceDTO.getProductId(), priceDTO.getBrandId(), date, date))
+                priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
                 .thenReturn(List.of());
 
         // When
         PriceException exception = assertThrows(PriceException.class, () -> {
-            priceService.getPrice(priceDTO);
+            priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
         });
 
         // Then

@@ -13,6 +13,7 @@ import com.qindel.test.exception.PriceException;
 import com.qindel.test.mapper.PriceMapper;
 import com.qindel.test.repository.PriceRepository;
 import com.qindel.test.response.ResponseEnum;
+import com.qindel.test.utils.Filter;
 
 import lombok.AllArgsConstructor;
 
@@ -24,18 +25,19 @@ public class PriceServiceImpl implements PriceService {
     private final PriceMapper priceMapper;
 
     @Override
-    public PriceResponseDTO getPrice(PriceDTO priceDTO) {
+    public PriceResponseDTO getPrice(PriceDTO priceDTO, Integer limit, Integer offset) {
 
+        Filter filter = new Filter(limit, offset);
         List<Price> prices = priceRepository
                 .findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                         priceDTO.getProductId(), priceDTO.getBrandId(), Instant.parse(priceDTO.getDate()),
-                        Instant.parse(priceDTO.getDate()));
+                        Instant.parse(priceDTO.getDate()), filter.getPageable());
 
-        // Get highest priority Price
-        Price prioritisedPrise = prices.stream().max(Comparator.comparingInt(Price::getPriority))
-                .orElseThrow(() -> new PriceException(ResponseEnum.NOT_FOUND));
+        if (prices.size() == 0) {
+            throw new PriceException(ResponseEnum.NOT_FOUND);
+        }
 
-        return priceMapper.mapperPriceToResponseDTO(prioritisedPrise);
+        return priceMapper.mapperPriceToResponseDTO(prices.get(0));
     }
 
 }
