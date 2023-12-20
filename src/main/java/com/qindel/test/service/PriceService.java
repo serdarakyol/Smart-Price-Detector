@@ -5,6 +5,6 @@ import com.qindel.test.dto.PriceResponseDTO;
 
 public interface PriceService {
 
-    PriceResponseDTO getPrice(PriceDTO priceDTO);
+    PriceResponseDTO getPrice(PriceDTO priceDTO, Integer limit, Integer offset);
     
 }
