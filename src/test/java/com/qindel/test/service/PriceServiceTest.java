@@ -102,7 +102,7 @@ public class PriceServiceTest {
                 .price(price.getPrice()).build();
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                 priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
-                .thenReturn(List.of(prices.get(0), prices.get(1)));
+                .thenReturn(List.of(prices.get(1), prices.get(0)));
 
         // When
         PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
@@ -145,7 +145,7 @@ public class PriceServiceTest {
         Instant date = Instant.parse(priceDTO.getDate());
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                 priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
-                .thenReturn(List.of(prices.get(0), prices.get(2)));
+                .thenReturn(List.of(prices.get(2), prices.get(0)));
 
         // When
         PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());
@@ -167,7 +167,7 @@ public class PriceServiceTest {
         Instant date = Instant.parse(priceDTO.getDate());
         when(priceRepository.findByProductIdAndBrand_IdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                 priceDTO.getProductId(), priceDTO.getBrandId(), date, date, filter.getPageable()))
-                .thenReturn(List.of(prices.get(0), prices.get(3)));
+                .thenReturn(List.of(prices.get(3), prices.get(0)));
 
         // When
         PriceResponseDTO actualDto = priceService.getPrice(priceDTO, filter.getLimit(), filter.getOffset());

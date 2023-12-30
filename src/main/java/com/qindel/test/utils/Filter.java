@@ -20,7 +20,7 @@ public class Filter {
 
     private void loadPage() {
         Sort sort = Sort.by("priority").descending();
-        if (this.limit != null && this.limit != null) {
+        if (this.offset != null && this.limit != null) {
             this.pageable = PageRequest.of(this.offset, this.limit, sort);
         } else if (this.offset != null && this.limit == null) {
             this.pageable = PageRequest.of(this.offset, 100, sort);
