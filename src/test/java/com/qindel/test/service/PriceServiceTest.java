@@ -137,7 +137,7 @@ public class PriceServiceTest {
         // Given
         Price price = prices.get(2);
         PriceDTO priceDTO = PriceDTO.builder().productId(price.getProductId()).brandId(price.getBrand().getId())
-                .date("2020-06-14T21:00:00Z").build();
+                .date("2020-06-15T21:00:00Z").build();
         PriceResponseDTO expectedDto = PriceResponseDTO.builder().productId(price.getProductId())
                 .brandId(price.getBrand().getId()).priceList(price.getPriceList())
                 .startDate(price.getStartDate().toString()).endDate(price.getEndDate().toString())
@@ -155,11 +155,11 @@ public class PriceServiceTest {
     }
 
     @Test
-    void testGetPriceForDay15Hour21() {
+    void testGetPriceForDay16Hour21() {
         // Given
         Price price = prices.get(3);
         PriceDTO priceDTO = PriceDTO.builder().productId(price.getProductId()).brandId(price.getBrand().getId())
-                .date("2020-06-14T21:00:00Z").build();
+                .date("2020-06-16T21:00:00Z").build();
         PriceResponseDTO expectedDto = PriceResponseDTO.builder().productId(price.getProductId())
                 .brandId(price.getBrand().getId()).priceList(price.getPriceList())
                 .startDate(price.getStartDate().toString()).endDate(price.getEndDate().toString())
